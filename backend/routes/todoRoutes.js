@@ -1,15 +1,16 @@
 const express = require("express");
 const router = express.Router();
-
-let todos = {
-  id: 1,
-  todoText: "make a website",
-  completed: false,
-};
+const Todo = require("../models/Todo");
 
 // Read all todos
-router.get("/", (req, res) => {
-  res.json(todos);
+router.get("/", async (req, res) => {
+  try {
+    const todos = await Todo.find();
+    res.json(todos);
+  } catch (error) {
+    console.error("Error fetching todos:", error);
+    res.status(500).json({ message: "Could not fetch todos" });
+  }
 });
 
 // Create a todo
