@@ -14,10 +14,15 @@ router.get("/", async (req, res) => {
 });
 
 // Create a todo
-router.post("/", (req, res) => {
-  res.send("api post todo route");
-  // get req.body and create a new todo
-  // res.status(201).json(newTodo); maybe to send the new todo for instant update
+router.post("/", async (req, res) => {
+  try {
+    const { title } = req.body;
+    const newTodo = await Todo.create({ title });
+    res.status(201).json(newTodo);
+  } catch (error) {
+    console.error("Error creating todo:", error);
+    res.status(500).json({ message: "Could not create todo", error: error.message });
+  }
 });
 
 // Read data for a todo (maybe use for prefilling edit form)
